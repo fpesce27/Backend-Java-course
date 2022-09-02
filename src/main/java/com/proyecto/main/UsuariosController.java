@@ -6,14 +6,16 @@ import com.proyecto.main.model.Usuario;
 import com.proyecto.main.repos.RepoProductos;
 import com.proyecto.main.repos.RepoUsuarios;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RequestMapping("/usuarios")
 public class UsuariosController {
 
@@ -24,6 +26,11 @@ public class UsuariosController {
     private RepoProductos repoProductos;
 
     // ABM de productos de un usuario
+
+    @GetMapping(path={"", "/"})
+    public List<Usuario> getUsuarios(Pageable page) {
+        return repoUsuarios.findAll(page).getContent();
+    }
 
     @GetMapping("/{id}/productos")
     public List<Producto> getProductos(@PathVariable Long id) {
@@ -69,3 +76,4 @@ public class UsuariosController {
     }
 
 }
+

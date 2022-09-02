@@ -1,24 +1,15 @@
 package com.proyecto.main.model;
 
-import com.proyecto.main.api.entities.Dolar;
 import com.proyecto.main.api.service.PrecioDolar;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 import java.util.List;
+
+import static com.proyecto.main.model.Dolar.precio;
 
 @Entity
 public class Producto {
-    @Transient
-    PrecioDolar precioDolar = new PrecioDolar();
-    @Transient
-    Dolar dolar = precioDolar.datosDolar();
-
-    public Producto() throws IOException {
-    }
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,12 +17,30 @@ public class Producto {
     private String nombre;
     @NotNull
     private float precio_en_pesos;
-    @Transient
-    private float precio_en_dolares;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    public float getPrecio_en_dolares() {
+        return precio_en_pesos / precio;
+    }
+
+    public void setPrecio_en_dolares(float precio_en_dolares) {
+        this.precio_en_dolares = precio_en_pesos / precio;
+    }
+
+    @Transient
+    private float precio_en_dolares = precio_en_pesos / precio;
+
+    private String img;
+
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<Usuario> usuario;
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public List<Usuario> getUsuario() {
         return usuario;
@@ -55,13 +64,5 @@ public class Producto {
 
     public void setPrecioPesos(float preciosPesos) {
         this.precio_en_pesos = preciosPesos;
-    }
-
-    public float getPrecio_en_dolares() {
-        return precio_en_pesos / dolar.compra;
-    }
-
-    public void setPrecio_en_dolares() {
-        this.precio_en_dolares = this.precio_en_pesos / dolar.compra;
     }
 }

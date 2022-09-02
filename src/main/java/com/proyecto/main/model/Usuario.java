@@ -28,9 +28,8 @@ public class Usuario {
     @NotNull @Enumerated(EnumType.STRING)
     private Rol rol;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<Producto> productos;
-
 
 
     public List<Producto> getProductos() {
